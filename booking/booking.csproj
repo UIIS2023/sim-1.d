@@ -5,7 +5,7 @@
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <!-- Ensure the TargetFramework is set correctly for a Windows-specific target -->
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
