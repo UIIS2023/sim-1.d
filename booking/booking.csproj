@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -124,16 +124,14 @@
     <PackageReference Include="FluentScheduler" Version="5.5.1" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="LiveCharts" Version="0.9.7" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="21.2.9" />
+    <PackageReference Include="Syncfusion.Shared.WPF" Version="21.2.9" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.3" />
     <PackageReference Include="MvvmNavigation.Wpf" Version="3.2.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="21.2.9" />
-    <PackageReference Include="Syncfusion.Shared.WPF" Version="21.2.9" />
     <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
     <PackageReference Include="PDFsharp" Version="1.50.5147" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Shared.WPF" Version="21.1.39" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
