@@ -1,4 +1,5 @@
-name: SonarCloud
+name: .NET CI Build and SonarCloud Analysis
+
 on:
   push:
     branches:
@@ -7,67 +8,51 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: Build and analyze
+  build-and-analyze:
+    name: Build and analyze on Windows
     runs-on: windows-latest
 
     steps:
-      - name: Set up JDK 17
+      - name: Set up JDK 17 for SonarCloud
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'zulu'
 
-      - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Setup .NET Core
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0'  # Specify your project's .NET version
-
-      - name: Install SonarCloud scanner
-        run: dotnet tool install --global dotnet-sonarscanner
-        shell: powershell
+          dotnet-version: '6.0'
 
       - name: Restore NuGet packages
         run: dotnet restore booking.sln
-        shell: powershell
-        
-      - name: Ensure RuntimeIdentifier 'win'
-        run: |
-          $csprojPath = 'booking/booking.csproj'
-          [xml]$csproj = Get-Content $csprojPath
-          $runtimeIdentifiersNode = $csproj.Project.PropertyGroup.RuntimeIdentifiers
-          if ($runtimeIdentifiersNode -eq $null) {
-            $newNode = $csproj.CreateElement("RuntimeIdentifiers", $csproj.Project.NamespaceURI)
-            $newNode.InnerText = 'win'
-            $csproj.Project.PropertyGroup.AppendChild($newNode)
-          }
-          else {
-            $runtimeIdentifiersNode.InnerText = 'win;' + $runtimeIdentifiersNode.InnerText
-          }
-          $csproj.Save($csprojPath)
-        shell: powershell
 
+      - name: Install SonarCloud scanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin SonarCloud analysis
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner begin /k:"UIIS2023_sim-1.d" /o:"uiis2023" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-        shell: powershell
+        run: >
+          dotnet-sonarscanner begin
+          /k:"<YourProjectKey>"
+          /o:"<YourOrganization>"
+          /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          /d:sonar.host.url="https://sonarcloud.io"
 
-      - name: Build the project
+      - name: Build solution
         run: msbuild /t:Rebuild /p:Configuration=Release booking.sln
-        shell: powershell
 
       - name: End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        shell: powershell
